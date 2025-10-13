@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'SF Pro';
+    font-style: normal;
+    font-weight: 400;
+    src: url("assets/fonts/SF-Pro-Text-Regular.otf");
+}
+
+@font-face {
+    font-family: 'SF Pro';
+    font-style: normal;
+    font-weight: 500;
+    src: url("assets/fonts/SF-Pro-Text-Medium.otf");
+}
+
+@font-face {
+    font-family: 'SF Pro';
+    font-style: normal;
+    font-weight: 600;
+    src: url('assets/fonts/SF-Pro-Text-Semibold.otf');
+}
+
+@font-face {
+    font-family: 'SF Pro';
+    font-style: normal;
+    font-weight: 700;
+    src: url('assets/fonts/SF-Pro-Text-Bold.otf');
+}
+
+@theme {
+  --color-text: #1B1B1D;
+  --color-white: #FFFFFF;
+  --color-border: rgba(0, 0, 0, 0.3);
+  --font-sf-pro: 'SF Pro';
+}
+
+
+body {
+  @apply text-text;
+  @apply font-sf-pro;
+}
+
+.bottom-bar-bg{
+  background-image: url('assets/menu/menu-bg.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
