@@ -147,7 +147,7 @@ const HomePage = () => {
 
       <AddWalletPopup isOpen={isAddWalletOpen} onClose={() => setIsAddWalletOpen(false)} />
 
-      <ConfirmTransactionPopup isOpen={true} onClose={() => {}} />
+      <ConfirmTransactionPopup isOpen={false} onClose={() => {}} />
     </AnimatePresence>
   );
 };
