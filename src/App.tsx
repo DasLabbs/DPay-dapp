@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import History from './pages/history';
 import HomePage from './pages/home';
 import ScanPage from './pages/scan';
+import TxStatus from './pages/tx-status';
 
 import './App.css';
 
@@ -12,11 +13,12 @@ function App() {
     <>
       <BrowserRouter>
         <main className="flex h-dvh w-dvw justify-center bg-[linear-gradient(33deg,#004CAD_31.46%,#1166D5_91.7%)]">
-          <div className="flex h-full w-full bg-white sm:max-w-[414px]">
+          <div id="container" className="relative flex h-full w-full overflow-hidden bg-white sm:max-w-[414px]">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/scan" element={<ScanPage />} />
               <Route path="/history" element={<History />} />
+              <Route path="/tx-status" element={<TxStatus />} />
             </Routes>
           </div>
         </main>

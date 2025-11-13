@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import scanFrame from '@assets/scan-frame.png';
 
 const BackIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +44,6 @@ const ScanPage = () => {
           video: { facingMode: 'environment' },
         });
 
-        // Gán stream cho cả 2 video elements
         if (videoBackgroundRef.current) {
           videoBackgroundRef.current.srcObject = stream;
         }
@@ -91,6 +91,19 @@ const ScanPage = () => {
     }
   };
 
+  useEffect(() => {
+    return () => {
+      if (flashlightOn) {
+        toggleFlashlight();
+      }
+
+      if (videoBackgroundRef.current && videoBackgroundRef.current.srcObject) {
+        const tracks = (videoBackgroundRef.current.srcObject as MediaStream).getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+    };
+  }, []);
+
   const handleGallerySelect = (): void => {
     console.log('Open gallery');
   };
@@ -137,7 +150,7 @@ const ScanPage = () => {
 
       {/* Center Camera View - Clear/Unblurred */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <div className="relative h-[280px] w-[280px] overflow-hidden rounded-3xl">
+        <div className="relative h-[280px] w-[280px] overflow-hidden rounded-[36px]">
           {/* Clear Camera Feed in Center */}
           <video
             ref={videoCenterRef}
@@ -147,11 +160,7 @@ const ScanPage = () => {
             className="absolute inset-0 h-full w-full object-cover"
           />
 
-          {/* Corner brackets */}
-          <div className="absolute left-0 top-0 h-16 w-16 rounded-tl-2xl border-l-4 border-t-4 border-white"></div>
-          <div className="absolute right-0 top-0 h-16 w-16 rounded-tr-2xl border-r-4 border-t-4 border-white"></div>
-          <div className="absolute bottom-0 left-0 h-16 w-16 rounded-bl-2xl border-b-4 border-l-4 border-white"></div>
-          <div className="absolute bottom-0 right-0 h-16 w-16 rounded-br-2xl border-b-4 border-r-4 border-white"></div>
+          <img src={scanFrame} alt="scan-frame" className="absolute inset-0 h-full w-full object-cover" />
 
           {/* Animated scanning line */}
         </div>

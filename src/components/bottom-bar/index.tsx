@@ -90,7 +90,6 @@ const ProfileIcon = () => (
   </svg>
 );
 
-// Navigation configuration
 const NAV_ITEMS = [
   {
     href: '/',
@@ -113,10 +112,10 @@ const NAV_ITEMS = [
     isSpecial: true, // Special circular background
   },
   {
-    href: '/referral',
-    label: 'Referral',
+    href: '/reward',
+    label: 'Reward',
     icon: GiftIcon,
-    matchPaths: ['/referral'],
+    matchPaths: ['/reward'],
   },
   {
     href: '/profile',

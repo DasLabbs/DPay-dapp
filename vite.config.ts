@@ -9,7 +9,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 export default defineConfig({
   server: {
     cors: true,
-    allowedHosts: ['5bef8c5eceba.ngrok-free.app'],
+    allowedHosts: true,
   },
   plugins: [
     react(),
@@ -34,6 +34,10 @@ export default defineConfig({
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
+        icons: [
+          { src: '/pwa-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/pwa-512.png', sizes: '512x512', type: 'image/png' },
+        ],
       },
 
       workbox: {
