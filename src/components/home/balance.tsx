@@ -17,6 +17,7 @@ const Balance = () => {
 
   const displayBalance = () => {
     if (isLoading) return '...';
+    if (!address) return '0.00';
     if (!isBalanceVisible) return `**** ${data?.symbol}`;
     return `${Number(data?.formatted).toFixed(2)} ${data?.symbol}`;
   };
