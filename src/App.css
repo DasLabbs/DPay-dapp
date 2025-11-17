@@ -30,6 +30,7 @@
 
 @theme {
   --color-text: #1B1B1D;
+  --color-primary: #1712FF;
   --color-white: #FFFFFF;
   --color-border: rgba(0, 0, 0, 0.3);
   --font-sf-pro: 'SF Pro';

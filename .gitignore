@@ -21,3 +21,8 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+
+
+#env files
+.env
+.env.*.local

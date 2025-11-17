@@ -1,38 +1,23 @@
-import { Toaster } from 'react-hot-toast';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { PrivyProvider } from '@privy-io/react-auth';
+import { WagmiProvider } from '@privy-io/wagmi';
+import { QueryClientProvider } from '@tanstack/react-query';
 
-import History from './pages/history';
-import HomePage from './pages/home';
-import ScanPage from './pages/scan';
-import TxStatus from './pages/tx-status';
+import { appConfigs } from './configs/app-configs';
+import { wagmiConfig } from './configs/wagmi-config';
+import queryClient from './libs/client/query-client';
+import AppRoutes from './routes/app-routes';
 
 import './App.css';
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <main className="flex h-dvh w-dvw justify-center bg-[linear-gradient(33deg,#004CAD_31.46%,#1166D5_91.7%)]">
-          <div id="container" className="relative flex h-full w-full overflow-hidden bg-white sm:max-w-[414px]">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/scan" element={<ScanPage />} />
-              <Route path="/history" element={<History />} />
-              <Route path="/tx-status" element={<TxStatus />} />
-            </Routes>
-          </div>
-        </main>
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            duration: 5000,
-            style: {
-              fontSize: '14px',
-            },
-          }}
-        />
-      </BrowserRouter>
-    </>
+    <PrivyProvider appId={appConfigs.privyAppId} clientId={appConfigs.privyClientId}>
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig}>
+          <AppRoutes />
+        </WagmiProvider>
+      </QueryClientProvider>
+    </PrivyProvider>
   );
 }
 
