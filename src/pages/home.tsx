@@ -22,24 +22,48 @@ import { useAccount } from 'wagmi';
 
 const HomePage = () => {
   const { address, isConnecting } = useAccount();
-  const [showSplash, setShowSplash] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const commingSoon = () => {
     toast('Coming Soon!', { icon: '🚧' });
   };
 
   useEffect(() => {
-    const splashScreenTimeout = setTimeout(() => {
-      setShowSplash(false);
-    }, 1000);
+    const loadAssets = async () => {
+      try {
+        // Wait for fonts
+        await document.fonts.ready;
 
-    return () => clearTimeout(splashScreenTimeout);
+        // Preload images
+        const imagesToLoad = [CardBg, MockImg, Mock2Img];
+        const imagePromises = imagesToLoad.map((src) => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = resolve;
+            img.onerror = reject;
+          });
+        });
+
+        await Promise.all(imagePromises);
+
+        // Minimum splash time
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error loading assets:', error);
+        setIsLoading(false);
+      }
+    };
+
+    loadAssets();
   }, []);
 
   return (
     <Suspense fallback={<SplashScreen />}>
       <AnimatePresence mode="wait">
-        {showSplash ? (
+        {isLoading ? (
           <SplashScreen key="splash" />
         ) : (
           <div className="relative flex h-full w-full flex-col">

@@ -5,7 +5,7 @@ import { appConfigs } from '@src/configs/app-configs';
 import { useAccount, useBalance } from 'wagmi';
 
 const Balance = () => {
-  const { address } = useAccount();
+  const { address, isConnecting } = useAccount();
   const { data, isLoading } = useBalance({
     address: address,
     token: appConfigs.tokenContractAddress as `0x${string}`,
@@ -27,7 +27,7 @@ const Balance = () => {
     <div className="flex flex-col gap-1">
       <div className="text-xs text-white">Your balance</div>
       <div className="flex items-center gap-3">
-        {isLoading ? (
+        {isLoading || isConnecting || !address ? (
           <div className="flex items-center gap-3">
             <div className="h-9 w-32 animate-pulse rounded-lg bg-white/20" />
             <div className="h-6 w-6 animate-pulse rounded bg-white/20" />
