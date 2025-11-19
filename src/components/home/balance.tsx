@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import EyeIcon from '@assets/eye.svg?react';
 import EyeBlindIcon from '@assets/eye-blind.svg?react';
+import { appConfigs } from '@src/configs/app-configs';
 import { useAccount, useBalance } from 'wagmi';
 
 const Balance = () => {
   const { address } = useAccount();
   const { data, isLoading } = useBalance({
     address: address,
+    token: appConfigs.tokenContractAddress as `0x${string}`,
   });
 
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
