@@ -16,9 +16,8 @@ const Balance = () => {
   };
 
   const displayBalance = () => {
-    if (isLoading) return '...';
     if (!address) return '0.00';
-    if (!isBalanceVisible) return `**** ${data?.symbol}`;
+    if (!isBalanceVisible) return `**** ${data?.symbol || ''}`;
     return `${Number(data?.formatted).toFixed(2)} ${data?.symbol}`;
   };
 
@@ -26,10 +25,19 @@ const Balance = () => {
     <div className="flex flex-col gap-1">
       <div className="text-xs text-white">Your balance</div>
       <div className="flex items-center gap-3">
-        <div className="text-[28px] font-bold text-white">{displayBalance()}</div>
-        <button onClick={toggleBalanceVisibility} className="cursor-pointer">
-          {isBalanceVisible ? <EyeIcon /> : <EyeBlindIcon />}
-        </button>
+        {isLoading ? (
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-32 animate-pulse rounded-lg bg-white/20" />
+            <div className="h-6 w-6 animate-pulse rounded bg-white/20" />
+          </div>
+        ) : (
+          <>
+            <div className="text-[28px] font-bold text-white">{displayBalance()}</div>
+            <button onClick={toggleBalanceVisibility} className="cursor-pointer">
+              {isBalanceVisible ? <EyeIcon /> : <EyeBlindIcon />}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
