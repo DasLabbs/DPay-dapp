@@ -1,5 +1,4 @@
 export enum StorageKey {
-  ACCESS_TOKEN = 'access_token',
-  REFRESH_TOKEN = 'refresh_token',
-  LANGUAGE = 'language',
+  ACCESS_TOKEN = 'privy:token',
+  REFRESH_TOKEN = 'privy:refresh_token',
 }

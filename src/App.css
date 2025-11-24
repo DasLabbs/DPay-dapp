@@ -42,6 +42,16 @@ body {
   @apply font-sf-pro;
 }
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .bottom-bar-bg{
   background-image: url('assets/menu/menu-bg.svg');
   background-repeat: no-repeat;

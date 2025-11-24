@@ -1,3 +1,4 @@
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
@@ -18,7 +19,18 @@ const AppRoutes = () => {
             <Route element={<PrivateRoute />}>
               {privateRoutes.map((route) => {
                 const Component = route.component;
-                return <Route key={route.path} path={route.path} element={<Component />} />;
+                const Layout = route.layout || React.Fragment;
+                return (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={
+                      <Layout>
+                        <Component />
+                      </Layout>
+                    }
+                  />
+                );
               })}
             </Route>
           </Routes>

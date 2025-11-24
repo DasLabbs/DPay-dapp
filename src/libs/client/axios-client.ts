@@ -1,23 +1,8 @@
-// import { generateAccessToken } from '@src/service/user';
 import { appConfigs } from '@src/configs/app-configs';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import { StorageKey } from '../constants/storage';
-import { getStorageData, removeStorageData } from '../helpers/storage';
-
-let isRefreshing = false;
-let failedQueue: { resolve: (value: string) => void; reject: (reason?: any) => void }[] = [];
-
-const processQueue = (error: AxiosError | null, token: string | null = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token as string);
-    }
-  });
-  failedQueue = [];
-};
+import { getStorageData } from '../helpers/storage';
 
 const axiosClient = axios.create({
   baseURL: appConfigs.apiURL,
@@ -27,7 +12,7 @@ axiosClient.interceptors.request.use(
   (config) => {
     const token = getStorageData<string>(StorageKey.ACCESS_TOKEN);
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['authorization'] = `Bearer ${token}`;
     }
     return config;
   },
@@ -42,44 +27,6 @@ axiosClient.interceptors.response.use(
 const handleResponse = (response: AxiosResponse) => response;
 
 const handleErrorResponse = async (error: AxiosError): Promise<AxiosResponse | undefined> => {
-  const originalRequest = error.config;
-  if (error.response?.status === 401 && originalRequest) {
-    if (isRefreshing) {
-      try {
-        const token = await new Promise<string>((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        });
-        originalRequest.headers['Authorization'] = `Bearer ${token}`;
-        return await axiosClient.request(originalRequest);
-      } catch (err) {
-        console.log('err: ', err);
-        return Promise.reject(err);
-      }
-    }
-
-    isRefreshing = true;
-    const refreshToken = getStorageData<string>(StorageKey.REFRESH_TOKEN);
-    if (refreshToken) {
-      try {
-        // const data = await generateAccessToken(refreshToken);
-        // setStorageData(StorageKey.ACCESS_TOKEN, data.accessToken);
-        // setStorageData(StorageKey.REFRESH_TOKEN, data.refreshToken);
-        // processQueue(null, data.accessToken);
-        // originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-        return await axiosClient.request(originalRequest);
-      } catch (refreshError) {
-        removeStorageData(StorageKey.ACCESS_TOKEN);
-        removeStorageData(StorageKey.REFRESH_TOKEN);
-
-        processQueue(refreshError as AxiosError, null);
-        window.location.href = '/';
-        return Promise.reject(handleError(refreshError as AxiosError));
-      } finally {
-        isRefreshing = false;
-      }
-    }
-  }
-
   return Promise.reject(handleError(error));
 };
 

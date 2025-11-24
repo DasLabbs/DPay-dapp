@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const SplashScreen = () => {
   return (
     <motion.div
-      className="splash-screen-bg flex h-full w-full items-center justify-center"
+      className="splash-screen-bg z-20 flex h-full w-full items-center justify-center"
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}

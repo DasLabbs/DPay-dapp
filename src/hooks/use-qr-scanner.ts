@@ -1,3 +1,4 @@
+/* eslint-disable unused-imports/no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode, Html5QrcodeScannerState, Html5QrcodeSupportedFormats } from 'html5-qrcode';
 
@@ -11,12 +12,27 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
   const [isScanning, setIsScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isTransitioningRef = useRef(false);
+  const isMountedRef = useRef(true);
   const blurCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
   const startScanning = async (elementId: string, facingMode: 'environment' | 'user' = 'environment') => {
-    if (isTransitioningRef.current) {
-      console.log('Already transitioning, skipping start');
+    // Wait for any ongoing transition to complete
+    let retries = 0;
+    while (isTransitioningRef.current && retries < 10) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      retries++;
+    }
+
+    if (!isMountedRef.current) {
+      console.log('Cannot start: component unmounted');
+      return;
+    }
+
+    // Check if element exists
+    const element = document.getElementById(elementId);
+    if (!element) {
+      console.error('QR reader element not found');
       return;
     }
 
@@ -33,6 +49,7 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
       const state = scannerRef.current.getState();
       if (state === Html5QrcodeScannerState.SCANNING) {
         console.log('Already scanning');
+        isTransitioningRef.current = false;
         return;
       }
 
@@ -46,7 +63,7 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
         { facingMode },
         config,
         (decodedText) => {
-          console.log('QR Code detected:', decodedText);
+          console.log('✅ QR Code detected:', decodedText);
           onScanSuccess(decodedText);
           stopScanning();
         },
@@ -55,21 +72,29 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
         }
       );
 
-      setIsScanning(true);
+      if (isMountedRef.current) {
+        setIsScanning(true);
 
-      // Start blur background if enabled
-      if (enableBlurBackground) {
-        setTimeout(() => startBlurBackground(elementId), 500);
+        // Start blur background if enabled
+        if (enableBlurBackground) {
+          setTimeout(() => startBlurBackground(elementId), 500);
+        }
       }
     } catch (err: any) {
-      console.error('Error starting scanner:', err);
-      onScanError?.(err?.message || 'Failed to start camera');
+      console.error('❌ Error starting scanner:', err);
+      if (isMountedRef.current) {
+        onScanError?.(err?.message || 'Failed to start camera');
+      }
     } finally {
-      isTransitioningRef.current = false;
+      if (isMountedRef.current) {
+        isTransitioningRef.current = false;
+      }
     }
   };
 
   const startBlurBackground = (elementId: string) => {
+    if (!isMountedRef.current) return;
+
     const qrContainer = document.getElementById(elementId);
     if (!qrContainer) return;
 
@@ -105,6 +130,7 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
 
     // Animation loop to draw video to canvas
     const drawFrame = () => {
+      if (!isMountedRef.current) return;
       if (video.readyState === video.HAVE_ENOUGH_DATA) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       }
@@ -115,9 +141,11 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
   };
 
   const stopScanning = async () => {
-    if (isTransitioningRef.current) {
-      console.log('Already transitioning, skipping stop');
-      return;
+    // Wait for any ongoing transition
+    let retries = 0;
+    while (isTransitioningRef.current && retries < 10) {
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      retries++;
     }
 
     try {
@@ -136,32 +164,46 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
       }
 
       if (scannerRef.current) {
-        const state = scannerRef.current.getState();
-        if (state === Html5QrcodeScannerState.SCANNING) {
-          await scannerRef.current.stop();
-          setIsScanning(false);
+        try {
+          const state = scannerRef.current.getState();
+          if (state === Html5QrcodeScannerState.SCANNING) {
+            await scannerRef.current.stop();
+            if (isMountedRef.current) {
+              setIsScanning(false);
+            }
+          }
+        } catch (err) {
+          // Silently ignore transition errors
+          console.log('⚠️ Scanner already stopped or transitioning');
         }
       }
     } catch (err) {
-      console.error('Error stopping scanner:', err);
+      console.error('❌ Error stopping scanner:', err);
     } finally {
+      // Always reset transition flag
       isTransitioningRef.current = false;
     }
   };
 
   const scanFile = async (file: File) => {
+    if (!isMountedRef.current) return;
+
     try {
       // Stop camera scan first if running
       if (scannerRef.current) {
         const state = scannerRef.current.getState();
         if (state === Html5QrcodeScannerState.SCANNING) {
           await stopScanning();
-          // Wait a bit for cleanup
+          // Wait for cleanup
           await new Promise((resolve) => setTimeout(resolve, 300));
         }
       }
 
       if (!scannerRef.current) {
+        const element = document.getElementById('qr-reader');
+        if (!element) {
+          throw new Error('QR reader element not found');
+        }
         scannerRef.current = new Html5Qrcode('qr-reader', {
           formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
           verbose: false,
@@ -169,37 +211,63 @@ export const useQRScanner = ({ onScanSuccess, onScanError, enableBlurBackground 
       }
 
       const decodedText = await scannerRef.current.scanFile(file, true);
-      console.log('QR Code from file:', decodedText);
-      onScanSuccess(decodedText);
+      console.log('✅ QR Code from file:', decodedText);
+
+      if (isMountedRef.current) {
+        onScanSuccess(decodedText);
+      }
 
       // Resume camera scan after file scan
-      setTimeout(() => {
-        startScanning('qr-reader');
-      }, 500);
+      if (isMountedRef.current) {
+        setTimeout(() => {
+          startScanning('qr-reader');
+        }, 300);
+      }
     } catch (err: any) {
-      console.error('Error scanning file:', err);
-      onScanError?.('No QR code found in image');
+      console.error('❌ Error scanning file:', err);
+      if (isMountedRef.current) {
+        onScanError?.('No QR code found in image');
 
-      // Resume camera scan even on error
-      setTimeout(() => {
-        startScanning('qr-reader');
-      }, 500);
+        // Resume camera scan even on error
+        setTimeout(() => {
+          if (isMountedRef.current) {
+            startScanning('qr-reader');
+          }
+        }, 300);
+      }
     }
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     return () => {
+      isMountedRef.current = false;
+
       // Cleanup
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
+
       if (blurCanvasRef.current) {
         blurCanvasRef.current.remove();
+        blurCanvasRef.current = null;
       }
+
       if (scannerRef.current) {
-        const state = scannerRef.current.getState();
-        if (state === Html5QrcodeScannerState.SCANNING && !isTransitioningRef.current) {
-          scannerRef.current.stop().catch(() => {});
+        // Force reset transition flag during cleanup
+        isTransitioningRef.current = false;
+
+        try {
+          const state = scannerRef.current.getState();
+          if (state === Html5QrcodeScannerState.SCANNING) {
+            scannerRef.current.stop().catch(() => {
+              // Ignore errors during cleanup
+            });
+          }
+        } catch (err) {
+          // Ignore errors during cleanup
         }
       }
     };

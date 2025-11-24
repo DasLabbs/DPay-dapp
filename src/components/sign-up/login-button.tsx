@@ -1,15 +1,12 @@
-import { usePrivy } from '@privy-io/react-auth';
+import { useLogin } from '@privy-io/react-auth';
 
 import Button from '../shared/button';
 
 const LoginButton = () => {
-  const { ready, login } = usePrivy();
+  const { login } = useLogin();
 
   const handleLogin = async () => {
     try {
-      if (!ready) {
-        return;
-      }
       login();
     } catch (error) {
       console.error('Login failed:', error);

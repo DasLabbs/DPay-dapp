@@ -6,6 +6,7 @@ type Route = {
   path: string;
   title?: string;
   component: React.LazyExoticComponent<React.ComponentType<any>>;
+  layout?: React.LazyExoticComponent<React.ComponentType<any>>;
 };
 
 const signUpPage: Route = {
@@ -18,6 +19,7 @@ const homePage: Route = {
   path: routes.HOME,
   title: 'Home',
   component: lazy(() => import('../pages/home')),
+  layout: lazy(() => import('../components/layouts/main-layout')),
 };
 
 const scanPage: Route = {
@@ -30,6 +32,7 @@ const historyPage: Route = {
   path: routes.HISTORY,
   title: 'History',
   component: lazy(() => import('../pages/history')),
+  layout: lazy(() => import('../components/layouts/main-layout')),
 };
 
 const txStatusPage: Route = {
@@ -42,6 +45,7 @@ const profilePage: Route = {
   path: routes.PROFILE,
   title: 'Profile',
   component: lazy(() => import('../pages/profile')),
+  layout: lazy(() => import('../components/layouts/main-layout')),
 };
 
 const publicRoutes: Route[] = [signUpPage];

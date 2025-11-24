@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import walletThumbnail from '@assets/wallet-thumb.png';
 import { usePrivy } from '@privy-io/react-auth';
-import SecondaryButton from '@src/components/shared/secondary-button';
+import CreateWalletButton from '@src/components/sign-up/create-wallet-button';
 import LoginButton from '@src/components/sign-up/login-button';
 import routes from '@src/routes/routes';
 
@@ -26,7 +26,7 @@ const SignUpPage = () => {
       </div>
       <div className="flex flex-col gap-4 px-6 py-8">
         <LoginButton />
-        <SecondaryButton disabled>Create new wallet</SecondaryButton>
+        <CreateWalletButton />
         <div className="text-center text-xs leading-[16px] text-[#7A7B83]">
           By continuing, you confirm that you have read and agree to our{' '}
           <span className="text-primary">Terms of Service </span>and{' '}
