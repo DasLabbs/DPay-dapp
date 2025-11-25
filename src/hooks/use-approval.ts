@@ -1,45 +1,68 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useState } from 'react';
 import abiToken from '@src/abis/abi-token.json';
 import { appConfigs } from '@src/configs/app-configs';
-import { ethers } from 'ethers';
+import { parseUnits } from 'viem';
+import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { useAccount } from 'wagmi';
 
-import { useEthersProvider } from './use-ethers-provider';
-
-export function useApproval() {
-  const provider = useEthersProvider();
+export function useTokenApproval(spenderAddress: string) {
   const { address } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
 
-  const approveTokenAmount = useCallback(
-    async (contractAddress: string, amount: string) => {
+  // Check current allowance
+  const { data: allowance, refetch: refetchAllowance } = useReadContract({
+    address: appConfigs.tokenContractAddress as `0x${string}`,
+    abi: abiToken,
+    functionName: 'allowance',
+    args: [address, spenderAddress],
+    query: {
+      enabled: !!address && !!spenderAddress,
+    },
+  });
+
+  // Wait for approval transaction
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: txHash,
+  });
+
+  // Approve function
+  const approve = useCallback(
+    async (amount: string) => {
       try {
-        const approveToken = new ethers.Contract(appConfigs.tokenContractAddress, abiToken, provider);
-        return await approveToken.approve(contractAddress, amount);
+        const hash = await writeContractAsync({
+          address: appConfigs.tokenContractAddress as `0x${string}`,
+          abi: abiToken,
+          functionName: 'approve',
+          args: [spenderAddress as `0x${string}`, parseUnits(amount, 6)],
+        });
+
+        setTxHash(hash);
+        return hash;
       } catch (error) {
-        console.error('Log - approve token amount error:', error);
+        console.error('Approve error:', error);
         throw error;
       }
     },
-    [address, provider]
+    [writeContractAsync, spenderAddress]
   );
 
-  const allowanceToken = useCallback(
-    async (contractAddress: string) => {
-      try {
-        const contractToken = new ethers.Contract(appConfigs.tokenContractAddress, abiToken, provider);
-        return await contractToken.allowance(address, contractAddress);
-      } catch (error) {
-        console.error('Log - allowance token error:', error);
-        throw error;
-      }
+  // Check if needs approval
+  const needsApproval = useCallback(
+    (amount: string) => {
+      if (!allowance) return true;
+      const requiredAmount = parseUnits(amount, 6);
+      return BigInt(allowance.toString()) < requiredAmount;
     },
-    [address, provider]
+    [allowance]
   );
 
-  return useMemo(() => {
-    return {
-      approveTokenAmount,
-      allowanceToken,
-    };
-  }, [approveTokenAmount, allowanceToken]);
+  return {
+    approve,
+    allowance,
+    needsApproval,
+    isConfirming,
+    isSuccess,
+    refetchAllowance,
+  };
 }

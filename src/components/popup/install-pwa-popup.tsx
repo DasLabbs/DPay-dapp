@@ -13,8 +13,17 @@ interface BeforeInstallPromptEvent extends Event {
 const InstallPWAPopup = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
+    // Detect iOS
+    const isIOSDevice =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    setIsIOS(isIOSDevice);
+
+    // Check if already installed
     const isInstalled =
       window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
 
@@ -25,43 +34,39 @@ const InstallPWAPopup = () => {
       return;
     }
 
-    // Listen for beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
-
-      // Stash the event so it can be triggered later
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-
-      // Show popup after a delay
+    if (isIOSDevice) {
+      // For iOS, show popup after delay if not installed
       setTimeout(() => {
         setShowPopup(true);
-      }, 3000); // Show after 3 seconds
-    };
+      }, 3000);
+    } else {
+      // For Android/Desktop, listen for beforeinstallprompt event
+      const handleBeforeInstallPrompt = (e: Event) => {
+        e.preventDefault();
+        setDeferredPrompt(e as BeforeInstallPromptEvent);
+        setTimeout(() => {
+          setShowPopup(true);
+        }, 3000);
+      };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    };
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      };
+    }
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
 
-    // Show the install prompt
     await deferredPrompt.prompt();
-
-    // Wait for the user to respond to the prompt
     const { outcome } = await deferredPrompt.userChoice;
 
     if (outcome === 'accepted') {
       console.log('User accepted the install prompt');
-    } else {
-      console.log('User dismissed the install prompt');
     }
 
-    // Clear the deferredPrompt
     setDeferredPrompt(null);
     setShowPopup(false);
   };
@@ -75,8 +80,8 @@ const InstallPWAPopup = () => {
     setShowPopup(false);
   };
 
-  //   Don't render if no prompt available
-  if (!deferredPrompt) {
+  // Don't render if not iOS and no prompt available
+  if (!isIOS && !deferredPrompt) {
     return null;
   }
 
@@ -106,18 +111,61 @@ const InstallPWAPopup = () => {
             </p>
           </div>
 
-          {/* Buttons */}
-          <div className="flex flex-col gap-3">
-            <Button onClick={handleInstall} className="w-full">
-              Install Now
-            </Button>
-            <button
-              onClick={handleDismiss}
-              className="text-sm font-medium text-[#7A7B83] transition-colors hover:text-[#1B1B1D]"
-            >
-              Not now
-            </button>
-          </div>
+          {isIOS ? (
+            // iOS Instructions
+            <div className="flex flex-col gap-4 rounded-2xl bg-[#F5F5F7] p-4">
+              <div className="text-center text-sm font-semibold text-[#1B1B1D]">How to Install on iOS</div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#7084FF] text-xs font-bold text-white">
+                  1
+                </div>
+                <div className="flex-1 text-sm text-[#1B1B1D]">
+                  Tap the <span className="font-semibold">Share</span> button{' '}
+                  <svg className="inline h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z" />
+                  </svg>{' '}
+                  at the bottom of your browser
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#7084FF] text-xs font-bold text-white">
+                  2
+                </div>
+                <div className="flex-1 text-sm text-[#1B1B1D]">
+                  Scroll down and tap <span className="font-semibold">"Add to Home Screen"</span>
+                  <svg className="ml-1 inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#7084FF] text-xs font-bold text-white">
+                  3
+                </div>
+                <div className="flex-1 text-sm text-[#1B1B1D]">
+                  Tap <span className="font-semibold">"Add"</span> to confirm
+                </div>
+              </div>
+            </div>
+          ) : (
+            // Android/Desktop - Auto install
+            <div className="flex flex-col gap-3">
+              <Button onClick={handleInstall} className="w-full">
+                Install Now
+              </Button>
+            </div>
+          )}
+
+          {/* Dismiss Button */}
+          <button
+            onClick={handleDismiss}
+            className="text-sm font-medium text-[#7A7B83] transition-colors hover:text-[#1B1B1D]"
+          >
+            Not now
+          </button>
         </div>
       </DrawerContent>
     </Drawer>
