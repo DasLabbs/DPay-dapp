@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 import BellIcon from '@assets/bell.svg?react';
 import CardBg from '@assets/card-bg.png';
 import MoreIcon from '@assets/more.svg?react';
@@ -13,6 +14,7 @@ import TransactionList from '@src/components/home/transaction-list';
 import CopyButton from '@src/components/shared/copy-button';
 import SplashScreen from '@src/components/splash-screen';
 import { truncateAddress } from '@src/libs/utils/common';
+import routes from '@src/routes/routes';
 import { AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 
@@ -60,13 +62,16 @@ const HomePage = () => {
         ) : (
           <div className="relative flex h-full w-full flex-col">
             <div className="border-b-border flex w-full items-center justify-between gap-8 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0.80)_48.56%,rgba(255,255,255,0.50)_100%)] px-4 py-3 backdrop-blur-[50px]">
-              <SettingsIcon />
+              <Link to={routes.SETTINGS}>
+                <SettingsIcon />
+              </Link>
+              <Link to={routes.PROFILE}>
+                <div className="flex cursor-pointer items-center gap-2">
+                  <div className="text-[17px] font-medium leading-[22px]">Main Account</div>
+                </div>
+              </Link>
 
-              <div className="flex items-center gap-2">
-                <div className="text-[17px] font-medium leading-[22px]">Main Account</div>
-              </div>
-
-              <BellIcon />
+              <BellIcon onClick={commingSoon} />
             </div>
 
             <div className="relative w-full py-4">

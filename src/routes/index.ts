@@ -48,7 +48,14 @@ const profilePage: Route = {
   layout: lazy(() => import('../components/layouts/main-layout')),
 };
 
+const settingsPage: Route = {
+  path: routes.SETTINGS,
+  title: 'Settings',
+  component: lazy(() => import('../pages/settings')),
+  layout: lazy(() => import('../components/layouts/main-layout')),
+};
+
 const publicRoutes: Route[] = [signUpPage];
-const privateRoutes: Route[] = [homePage, scanPage, historyPage, txStatusPage, profilePage];
+const privateRoutes: Route[] = [homePage, scanPage, historyPage, txStatusPage, profilePage, settingsPage];
 
 export { privateRoutes, publicRoutes };

@@ -5,6 +5,7 @@ const routes = {
   TX_STATUS: '/tx-status',
   SIGN_UP: '/sign-up',
   PROFILE: '/profile',
+  SETTINGS: '/settings',
 };
 
 export default routes;

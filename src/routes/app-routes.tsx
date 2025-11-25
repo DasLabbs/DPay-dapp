@@ -1,6 +1,7 @@
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import InstallPWAPopup from '@src/components/popup/install-pwa-popup';
 
 import PrivateRoute from './private-route';
 import { privateRoutes, publicRoutes } from '.';
@@ -34,6 +35,7 @@ const AppRoutes = () => {
               })}
             </Route>
           </Routes>
+          <InstallPWAPopup />
         </div>
       </main>
       <Toaster

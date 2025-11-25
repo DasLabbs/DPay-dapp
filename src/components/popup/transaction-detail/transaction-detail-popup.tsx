@@ -18,7 +18,7 @@ const TransactionDetailDrawer = ({ isOpen, onClose, transaction }: TransactionDe
   if (!transaction) return null;
 
   const handleViewOnExplorer = () => {
-    window.open(`https://explorer.somnia.network/tx/${transaction.hash}`, '_blank');
+    window.open(`${appConfigs.sominiaExplorerURL}/tx/${transaction.hash}`, '_blank');
   };
 
   const getStatusColor = (status: string) => {

@@ -16,7 +16,7 @@ const ProfileAvatar = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       {/* Avatar */}
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-[#7084FF] to-[#4A5FE8] text-3xl font-bold text-white">
+      <div className="from-primary flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br to-[#4A5FE8] text-3xl font-bold text-white">
         {getInitials(user?.username)}
       </div>
 
