@@ -7,7 +7,6 @@ import GalleryButton from '@src/components/scan/gallery-button';
 import ScanHeader from '@src/components/scan/scan-header';
 import { useQRScanner } from '@src/hooks/use-qr-scanner';
 import { EMVQRData, parseEMVQR } from '@src/libs/helpers/qr-paser';
-import { Html5Qrcode } from 'html5-qrcode';
 
 const MOCKUP_QR =
   '38540010A00000072701240006970418011031439644030208QRIBFTTA52040000530384054031005802VN5907Daslabs6016Ho Chi Minh City6105700006304FCFC';
@@ -49,16 +48,42 @@ const ScanPage = () => {
   });
 
   useEffect(() => {
-    Html5Qrcode.getCameras()
-      .then((devices) => {
-        setHasPermission(devices.length > 0);
-        if (devices.length > 0) {
+    const checkPermissionAndStart = async () => {
+      try {
+        // Check if permission is already granted
+        const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+
+        if (permissionStatus.state === 'granted') {
+          setHasPermission(true);
           startScanning('qr-reader');
+        } else if (permissionStatus.state === 'prompt') {
+          // Will request permission when starting camera
+          setHasPermission(true);
+          startScanning('qr-reader');
+        } else {
+          setHasPermission(false);
         }
-      })
-      .catch(() => {
-        setHasPermission(false);
-      });
+
+        // Listen for permission changes
+        permissionStatus.onchange = () => {
+          if (permissionStatus.state === 'granted') {
+            setHasPermission(true);
+            startScanning('qr-reader');
+          } else if (permissionStatus.state === 'denied') {
+            setHasPermission(false);
+            stopScanning();
+          }
+        };
+        // eslint-disable-next-line unused-imports/no-unused-vars
+      } catch (error) {
+        // Fallback if Permissions API not supported
+        console.log('Permissions API not supported, using fallback');
+        setHasPermission(true);
+        startScanning('qr-reader');
+      }
+    };
+
+    checkPermissionAndStart();
 
     return () => {
       stopScanning();
@@ -90,9 +115,19 @@ const ScanPage = () => {
   if (hasPermission === false) {
     return (
       <div className="flex h-full items-center justify-center p-6 text-center">
-        <div>
-          <h2 className="mb-2 text-xl font-bold">Camera Permission Required</h2>
-          <p className="text-gray-600">Please allow camera access to scan QR codes</p>
+        <div className="flex flex-col gap-4">
+          <h2 className="mb-2 text-xl font-bold text-white">Camera Permission Required</h2>
+          <p className="text-gray-400">Please allow camera access in your browser settings to scan QR codes</p>
+          <button
+            onClick={() => {
+              // Try to request permission again
+              setHasPermission(true);
+              setTimeout(() => startScanning('qr-reader'), 100);
+            }}
+            className="rounded-xl bg-[#7084FF] px-6 py-3 font-semibold text-white"
+          >
+            Grant Permission
+          </button>
         </div>
       </div>
     );

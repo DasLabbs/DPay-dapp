@@ -48,7 +48,7 @@ export function useTransferFunds() {
         // Execute transfer
         toast.loading('Processing transfer...', { id: 'transfer' });
 
-        const amountInWei = parseUnits(amountStr, 6); // USDT = 6 decimals
+        const amountInWei = parseUnits(amountStr, 18); // USDT = 6 decimals
         const txHash = await transfer(amountInWei.toString());
 
         // Wait for transfer transaction to be mined
