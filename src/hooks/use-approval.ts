@@ -34,7 +34,7 @@ export function useTokenApproval(spenderAddress: string) {
           address: appConfigs.tokenContractAddress as `0x${string}`,
           abi: abiToken,
           functionName: 'approve',
-          args: [spenderAddress as `0x${string}`, parseUnits(amount, 6)],
+          args: [spenderAddress as `0x${string}`, parseUnits(amount, 18)],
         });
 
         setTxHash(hash);
@@ -51,7 +51,7 @@ export function useTokenApproval(spenderAddress: string) {
   const needsApproval = useCallback(
     (amount: string) => {
       if (!allowance) return true;
-      const requiredAmount = parseUnits(amount, 6);
+      const requiredAmount = parseUnits(amount, 18);
       return BigInt(allowance.toString()) < requiredAmount;
     },
     [allowance]

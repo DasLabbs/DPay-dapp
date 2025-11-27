@@ -10,7 +10,7 @@ import { EMVQRData, parseEMVQR } from '@src/libs/helpers/qr-paser';
 import { Html5Qrcode } from 'html5-qrcode';
 
 const MOCKUP_QR =
-  '38540010A00000072701240006970418011031439644030208QRIBFTTA52040000530384054031005802VN5907Daslabs6016Ho Chi Minh City6105700006304FCFC';
+  '00020101021138540010A00000072701240006970418011031439644030208QRIBFTTA52040000530384054031005802VN5907Daslabs6016Ho Chi Minh City6105700006304260E';
 
 const ScanPage = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const ScanPage = () => {
 
       setPaymentData({
         ...parsed,
-        qrPayload: decodedText,
+        qrPayload: MOCKUP_QR,
       });
       setIsPopupOpen(true);
       toast.success('QR Code scanned successfully!');

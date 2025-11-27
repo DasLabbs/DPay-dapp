@@ -17,6 +17,7 @@ export type TransactionResponse = {
   from: string;
   gasUsed: number;
   gasPrice: number;
+  formattedAmount: number;
   totalFee: number;
   to: string;
 };

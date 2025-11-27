@@ -9,7 +9,6 @@ import { useAxios } from '@src/providers/axios-provider';
 import { getTransactionsHistory, TransactionResponse } from '@src/services/transaction/transaction.service';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { ethers } from 'ethers';
 
 interface GroupedTransactions {
   [key: string]: TransactionResponse[];
@@ -135,7 +134,7 @@ const History = () => {
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">
-                          <div className="text-right text-sm font-medium">${ethers.utils.formatUnits(tx.amount)}</div>
+                          <div className="text-right text-sm font-medium">${tx.formattedAmount}</div>
                           <div className="text-xs font-medium text-[#1B1B1D] opacity-50">
                             {format(new Date(tx.createdAt), 'MMM dd, HH:mm')}
                           </div>
