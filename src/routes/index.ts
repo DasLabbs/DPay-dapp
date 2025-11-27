@@ -55,7 +55,14 @@ const settingsPage: Route = {
   layout: lazy(() => import('../components/layouts/main-layout')),
 };
 
+const rewardsPage: Route = {
+  path: routes.REWARDS,
+  title: 'Rewards',
+  component: lazy(() => import('../pages/rewards')),
+  layout: lazy(() => import('../components/layouts/main-layout')),
+};
+
 const publicRoutes: Route[] = [signUpPage];
-const privateRoutes: Route[] = [homePage, scanPage, historyPage, txStatusPage, profilePage, settingsPage];
+const privateRoutes: Route[] = [homePage, scanPage, historyPage, txStatusPage, profilePage, settingsPage, rewardsPage];
 
 export { privateRoutes, publicRoutes };

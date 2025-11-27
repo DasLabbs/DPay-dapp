@@ -3,7 +3,7 @@ import SquareArrowOutUpRight from '@assets/square-arrow-out-right.svg?react';
 import Button from '@src/components/shared/button';
 import { Drawer, DrawerContent } from '@src/components/shared/drawer';
 import { appConfigs } from '@src/configs/app-configs';
-import { truncateAddress } from '@src/libs/utils/common';
+import { formatBalance, truncateAddress } from '@src/libs/utils/common';
 import { TransactionResponse } from '@src/services/transaction/transaction.service';
 import { format } from 'date-fns';
 import { ethers } from 'ethers';
@@ -62,7 +62,9 @@ const TransactionDetailDrawer = ({ isOpen, onClose, transaction }: TransactionDe
             {/* Amount */}
             <div className="flex items-center justify-between border-b border-dashed border-[#D7D7D7] pb-4">
               <div className="text-base text-[#7A7B83]">Amount</div>
-              <div className="text-base font-semibold text-[#1B1B1D]">{transaction.formattedAmount} USDT</div>
+              <div className="text-base font-semibold text-[#1B1B1D]">
+                {formatBalance(transaction.formattedAmount)} USDT
+              </div>
             </div>
 
             {/* Status */}

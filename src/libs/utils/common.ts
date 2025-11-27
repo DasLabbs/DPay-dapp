@@ -4,6 +4,15 @@ export const truncateAddress = (address: string, startLength = 6, endLength = 4)
   return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 };
 
+export const formatBalance = (value: number, fractionDigits = 2) => {
+  const formattedAmount = value.toLocaleString('en-US', {
+    minimumFractionDigits: fractionDigits,
+    maximumFractionDigits: fractionDigits,
+  });
+
+  return formattedAmount;
+};
+
 export const formatNumber = (value: number, fractionDigits = 6) => {
   if (isNaN(value)) return '0';
   if (!isFinite(value)) return value > 0 ? '∞' : '-∞';

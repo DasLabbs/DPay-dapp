@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import BellIcon from '@assets/bell.svg?react';
@@ -13,6 +13,7 @@ import Balance from '@src/components/home/balance';
 import TransactionList from '@src/components/home/transaction-list';
 import CopyButton from '@src/components/shared/copy-button';
 import SplashScreen from '@src/components/splash-screen';
+import { useAssetsLoaded } from '@src/hooks/use-assets-loaded';
 import { truncateAddress } from '@src/libs/utils/common';
 import routes from '@src/routes/routes';
 import { AnimatePresence } from 'framer-motion';
@@ -20,7 +21,7 @@ import { useAccount } from 'wagmi';
 
 const HomePage = () => {
   const { address, isConnecting } = useAccount();
-  const [isLoading, setIsLoading] = useState(true);
+  const assetsLoaded = useAssetsLoaded([CardBg]);
 
   const commingSoon = () => {
     toast('Coming Soon!', {
@@ -39,28 +40,13 @@ const HomePage = () => {
     });
   };
 
-  useEffect(() => {
-    const loadAssets = async () => {
-      try {
-        await document.fonts.ready;
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error loading assets:', error);
-        setIsLoading(false);
-      }
-    };
-
-    loadAssets();
-  }, []);
-
   return (
     <Suspense fallback={<SplashScreen />}>
       <AnimatePresence mode="wait">
-        {isLoading ? (
+        {!assetsLoaded ? (
           <SplashScreen key="splash" />
         ) : (
-          <div className="relative flex h-full w-full flex-col">
+          <div className="relative flex h-full w-full flex-col pb-10">
             <div className="border-b-border flex w-full items-center justify-between gap-8 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0.80)_48.56%,rgba(255,255,255,0.50)_100%)] px-4 py-3 backdrop-blur-[50px]">
               <Link to={routes.SETTINGS}>
                 <SettingsIcon />

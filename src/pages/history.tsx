@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BackIcon from '@assets/back.svg?react';
 import TransferIcon from '@assets/transfer.svg?react';
 import TransactionDetailDrawer from '@src/components/popup/transaction-detail/transaction-detail-popup';
-import { truncateAddress } from '@src/libs/utils/common';
+import { formatBalance, truncateAddress } from '@src/libs/utils/common';
 import { useAxios } from '@src/providers/axios-provider';
 import { getTransactionsHistory, TransactionResponse } from '@src/services/transaction/transaction.service';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -134,7 +134,7 @@ const History = () => {
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">
-                          <div className="text-right text-sm font-medium">${tx.formattedAmount}</div>
+                          <div className="text-right text-sm font-medium">${formatBalance(tx.formattedAmount)}</div>
                           <div className="text-xs font-medium text-[#1B1B1D] opacity-50">
                             {format(new Date(tx.createdAt), 'MMM dd, HH:mm')}
                           </div>

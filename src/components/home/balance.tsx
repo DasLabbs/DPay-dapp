@@ -2,6 +2,7 @@ import { useState } from 'react';
 import EyeIcon from '@assets/eye.svg?react';
 import EyeBlindIcon from '@assets/eye-blind.svg?react';
 import { appConfigs } from '@src/configs/app-configs';
+import { formatBalance } from '@src/libs/utils/common';
 import { useAccount, useBalance } from 'wagmi';
 
 const Balance = () => {
@@ -20,7 +21,11 @@ const Balance = () => {
   const displayBalance = () => {
     if (!address) return '0.00';
     if (!isBalanceVisible) return `**** ${data?.symbol || ''}`;
-    return `${Number(data?.formatted).toFixed(2)} ${data?.symbol}`;
+
+    const amount = Number(data?.formatted || 0);
+    const formattedAmount = formatBalance(amount);
+
+    return `${formattedAmount} ${data?.symbol}`;
   };
 
   return (

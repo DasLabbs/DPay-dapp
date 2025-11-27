@@ -6,6 +6,7 @@ const routes = {
   SIGN_UP: '/sign-up',
   PROFILE: '/profile',
   SETTINGS: '/settings',
+  REWARDS: '/rewards',
 };
 
 export default routes;

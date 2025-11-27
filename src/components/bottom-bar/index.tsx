@@ -112,10 +112,10 @@ const NAV_ITEMS = [
     isSpecial: true, // Special circular background
   },
   {
-    href: '/reward',
+    href: '/rewards',
     label: 'Reward',
     icon: GiftIcon,
-    matchPaths: ['/reward'],
+    matchPaths: ['/rewards'],
   },
   {
     href: '/profile',
