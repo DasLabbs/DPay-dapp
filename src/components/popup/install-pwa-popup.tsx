@@ -3,7 +3,8 @@ import CloseIcon from '@assets/shared/close.svg?react';
 
 import Button from '../shared/button';
 import { Drawer, DrawerContent } from '../shared/drawer';
-import Logo from '../shared/logo';
+
+import logo from '/pwa-512.png';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -99,9 +100,7 @@ const InstallPWAPopup = () => {
 
           {/* Icon */}
           <div className="flex justify-center">
-            <div className="bg-primary flex h-24 w-24 items-center justify-center rounded-xl text-white">
-              <Logo height={20} />
-            </div>
+            <img src={logo} alt="DPay Logo" className="h-24 w-24" />
           </div>
 
           {/* Description */}
