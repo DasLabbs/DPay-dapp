@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router-dom';
 import completeJson from '@assets/animation/complete.json';
+import logoText from '@assets/logo-text.svg';
 import ShareIcon from '@assets/shared/share.svg?react';
 import SquareArrowOutUpRight from '@assets/square-arrow-out-right.svg?react';
 import { appConfigs } from '@src/configs/app-configs';
@@ -120,6 +121,12 @@ const PaymentStatus = () => {
   return (
     <div className="flex h-full w-full flex-col">
       <div ref={receiptRef} className="flex flex-col bg-white">
+        <div className="bg-primary w-full py-4">
+          <div className="flex justify-center px-6">
+            <img src={logoText} alt="DPay" className="h-8 w-auto" />
+          </div>
+        </div>
+
         <div className="flex flex-col items-center gap-4 pb-4 pt-8">
           <Lottie animationData={completeJson} loop={false} width={64} className="w-[64px]! object-cover" />
           <div className="flex flex-col items-center gap-2">
