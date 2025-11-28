@@ -14,6 +14,7 @@ import TransactionList from '@src/components/home/transaction-list';
 import CopyButton from '@src/components/shared/copy-button';
 import SplashScreen from '@src/components/splash-screen';
 import { useAssetsLoaded } from '@src/hooks/use-assets-loaded';
+import { useFetchProfile } from '@src/hooks/use-fetch-profile';
 import { truncateAddress } from '@src/libs/utils/common';
 import routes from '@src/routes/routes';
 import { useUser } from '@src/stores/auth.store';
@@ -23,6 +24,7 @@ import { useAccount } from 'wagmi';
 const HomePage = () => {
   const { address, isConnecting } = useAccount();
   const assetsLoaded = useAssetsLoaded([CardBg]);
+  useFetchProfile();
   const user = useUser();
 
   const commingSoon = () => {

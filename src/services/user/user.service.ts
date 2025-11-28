@@ -21,3 +21,8 @@ export const getLeaderboard = async (axios: AxiosInstance) => {
   const response = await axios.get('/api/v1/users/point-leaderboard');
   return response.data?.data as Leaderboard;
 };
+
+export const getUserProfile = async (axios: AxiosInstance) => {
+  const response = await axios.get('/api/v1/users/profile');
+  return response.data?.data;
+};
