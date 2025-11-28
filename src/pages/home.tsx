@@ -16,12 +16,14 @@ import SplashScreen from '@src/components/splash-screen';
 import { useAssetsLoaded } from '@src/hooks/use-assets-loaded';
 import { truncateAddress } from '@src/libs/utils/common';
 import routes from '@src/routes/routes';
+import { useUser } from '@src/stores/auth.store';
 import { AnimatePresence } from 'framer-motion';
 import { useAccount } from 'wagmi';
 
 const HomePage = () => {
   const { address, isConnecting } = useAccount();
   const assetsLoaded = useAssetsLoaded([CardBg]);
+  const user = useUser();
 
   const commingSoon = () => {
     toast('Coming Soon!', {
@@ -65,14 +67,21 @@ const HomePage = () => {
               <div className="absolute left-10 top-10 flex items-center justify-between">
                 <div className="flex flex-col gap-2">
                   <Balance />
-                  {isConnecting || !address ? (
-                    <div className="h-7 w-36 animate-pulse rounded-[12px] bg-white/20" />
-                  ) : (
-                    <div className="flex w-fit items-center gap-2 rounded-[12px] bg-[rgba(0,0,0,0.16)] px-2 py-[6px]">
-                      <div className="text-xs text-white">{truncateAddress(address)}</div>
-                      <CopyButton text={address} />
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {isConnecting || !address ? (
+                      <div className="h-7 w-36 animate-pulse rounded-[12px] bg-white/20" />
+                    ) : (
+                      <div className="flex w-fit items-center gap-2 rounded-[12px] bg-[rgba(0,0,0,0.16)] px-2 py-[6px]">
+                        <div className="text-xs text-white">{truncateAddress(address)}</div>
+                        <CopyButton text={address} />
+                      </div>
+                    )}
+                    {user && (
+                      <div className="flex w-fit items-center gap-2 rounded-[12px] bg-[rgba(0,0,0,0.16)] px-2 py-[6px]">
+                        <div className="text-xs text-white">⭐ {user.point || 0} Points</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="absolute bottom-10 left-10 flex w-[80%] items-center justify-between">

@@ -5,6 +5,8 @@ export const truncateAddress = (address: string, startLength = 6, endLength = 4)
 };
 
 export const formatBalance = (value: number, fractionDigits = 2) => {
+  if (!value || isNaN(value)) return '0.00';
+
   const formattedAmount = value.toLocaleString('en-US', {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,

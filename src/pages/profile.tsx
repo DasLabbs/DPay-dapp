@@ -5,6 +5,7 @@ import ProfileAvatar from '@src/components/profile/profile-avatar';
 import ProfileInfo from '@src/components/profile/profile-info';
 import ProfileSettings from '@src/components/profile/profile-settings';
 import ProfileWallets from '@src/components/profile/profile-wallet';
+import routes from '@src/routes/routes';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const ProfilePage = () => {
     <div className="flex h-full w-full flex-col bg-white pb-[80px]">
       {/* Header */}
       <div className="flex items-center justify-center border-b border-[#E5E5E5] px-4 py-4">
-        <div onClick={() => navigate(-1)} className="absolute left-4 cursor-pointer">
+        <div onClick={() => navigate(routes.HOME)} className="absolute left-4 cursor-pointer">
           <BackIcon />
         </div>
         <h1 className="text-xl font-semibold text-[#1B1B1D]">Profile</h1>

@@ -6,6 +6,7 @@ import TransferIcon from '@assets/transfer.svg?react';
 import TransactionDetailDrawer from '@src/components/popup/transaction-detail/transaction-detail-popup';
 import { formatBalance, truncateAddress } from '@src/libs/utils/common';
 import { useAxios } from '@src/providers/axios-provider';
+import routes from '@src/routes/routes';
 import { getTransactionsHistory, TransactionResponse } from '@src/services/transaction/transaction.service';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -66,7 +67,7 @@ const History = () => {
       <div className="flex h-full w-full flex-col bg-white">
         {/* Header */}
         <div className="flex items-center justify-center border-b border-[#E5E5E5] px-4 py-4">
-          <div onClick={() => navigate(-1)} className="absolute left-4 cursor-pointer">
+          <div onClick={() => navigate(routes.HOME)} className="absolute left-4 cursor-pointer">
             <BackIcon />
           </div>
           <h1 className="text-xl font-semibold text-[#1B1B1D]">History</h1>

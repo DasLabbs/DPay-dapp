@@ -91,7 +91,7 @@ const TransactionDetailDrawer = ({ isOpen, onClose, transaction }: TransactionDe
             <div className="flex items-center justify-between border-b border-dashed border-[#D7D7D7] pb-4">
               <div className="text-base text-[#7A7B83]">Gas Fee</div>
               <div className="text-base font-semibold text-[#1B1B1D]">
-                {ethers.utils.formatUnits(transaction.totalFee)} {appConfigs.sominiaNativeTokenSymbol}
+                {ethers.utils?.formatUnits(transaction.totalFee) || 0} {appConfigs.sominiaNativeTokenSymbol}
               </div>
             </div>
 

@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router-dom';
+import BackIcon from '@assets/back.svg?react';
 import rank1 from '@assets/rank1.png';
 import rank2 from '@assets/rank2.png';
 import rank3 from '@assets/rank3.png';
-import ArrowLeftIcon from '@assets/shared/arrow-left.svg?react';
 import Button from '@src/components/shared/button';
 import { truncateAddress } from '@src/libs/utils/common';
 import { useAxios } from '@src/providers/axios-provider';
+import routes from '@src/routes/routes';
 import { getLeaderboard } from '@src/services/user/user.service';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
@@ -54,8 +55,8 @@ const RewardsPage = () => {
     <div className="flex h-full w-full flex-col bg-white pb-20">
       {/* Header */}
       <div className="flex items-center justify-center border-b border-[#E5E5E5] px-4 py-4">
-        <div onClick={() => navigate(-1)} className="absolute left-4 cursor-pointer">
-          <ArrowLeftIcon />
+        <div onClick={() => navigate(routes.HOME)} className="absolute left-4 cursor-pointer">
+          <BackIcon />
         </div>
         <h1 className="text-xl font-semibold text-[#1B1B1D]">Rewards</h1>
       </div>

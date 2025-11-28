@@ -4,7 +4,7 @@ const ProfileAvatar = () => {
   const user = useUser();
 
   const getInitials = (name?: string) => {
-    if (!name) return 'U';
+    if (!name) return 'MA';
     return name
       .split(' ')
       .map((n) => n[0])
@@ -21,7 +21,7 @@ const ProfileAvatar = () => {
       </div>
 
       {/* Name */}
-      <div className="text-xl font-semibold text-[#1B1B1D]">{user?.username || 'User'}</div>
+      <div className="text-xl font-semibold text-[#1B1B1D]">{user?.username || 'Main Account'}</div>
     </div>
   );
 };

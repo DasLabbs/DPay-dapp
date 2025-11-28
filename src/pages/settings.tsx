@@ -35,7 +35,7 @@ const SettingsPage = () => {
     <div className="flex h-full w-full flex-col bg-white pb-20">
       {/* Header */}
       <div className="flex items-center justify-center border-b border-[#E5E5E5] px-4 py-4">
-        <div onClick={() => navigate(-1)} className="absolute left-4 cursor-pointer">
+        <div onClick={() => navigate(routes.HOME)} className="absolute left-4 cursor-pointer">
           <ArrowLeftIcon />
         </div>
         <h1 className="text-xl font-semibold text-[#1B1B1D]">Settings</h1>

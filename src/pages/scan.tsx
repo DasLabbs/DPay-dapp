@@ -7,6 +7,7 @@ import GalleryButton from '@src/components/scan/gallery-button';
 import ScanHeader from '@src/components/scan/scan-header';
 import { useQRScanner } from '@src/hooks/use-qr-scanner';
 import { EMVQRData, parseEMVQR } from '@src/libs/helpers/qr-paser';
+import routes from '@src/routes/routes';
 import { Html5Qrcode } from 'html5-qrcode';
 
 const MOCKUP_QR =
@@ -67,7 +68,7 @@ const ScanPage = () => {
 
   const handleBack = () => {
     stopScanning();
-    navigate(-1);
+    navigate(routes.HOME);
   };
 
   const toggleFlashlight = async () => {

@@ -3,6 +3,7 @@ import { create } from 'zustand';
 interface User {
   userId: string;
   username?: string;
+  point?: number;
   createdAt?: string;
 }
 

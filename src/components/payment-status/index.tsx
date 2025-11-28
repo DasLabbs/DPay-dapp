@@ -181,7 +181,7 @@ const PaymentStatus = () => {
                 <div className="flex items-center justify-between border-b border-dashed border-[#D7D7D7] py-4">
                   <div className="text-base text-[#7A7B83]">Gas Fee</div>
                   <div className="text-base font-semibold text-[#1B1B1D]">
-                    {ethers.utils.formatEther(txData.gasFee)} {appConfigs.sominiaNativeTokenSymbol}
+                    {ethers.utils?.formatEther(txData.gasFee) || 0} {appConfigs.sominiaNativeTokenSymbol}
                   </div>
                 </div>
               )}
