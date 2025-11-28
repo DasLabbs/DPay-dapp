@@ -122,7 +122,7 @@ const PaymentStatus = () => {
     <div className="flex h-full w-full flex-col">
       <div ref={receiptRef} className="flex flex-col bg-white">
         <div className="bg-primary w-full py-4">
-          <div className="flex justify-center px-6">
+          <div className="flex justify-start px-6">
             <img src={logoText} alt="DPay" className="h-8 w-auto" />
           </div>
         </div>
