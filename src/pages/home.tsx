@@ -78,7 +78,7 @@ const HomePage = () => {
                     )}
                     {user && (
                       <div className="flex w-fit items-center gap-2 rounded-[12px] bg-[rgba(0,0,0,0.16)] px-2 py-[6px]">
-                        <div className="text-xs text-white">⭐ {user.point || 0} Points</div>
+                        <div className="text-xs text-white">⭐ {user?.point?.toLocaleString() || 0} Points</div>
                       </div>
                     )}
                   </div>
