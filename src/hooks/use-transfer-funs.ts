@@ -64,7 +64,7 @@ export function useTransferFunds() {
           qrPayload,
         });
 
-        toast.success('Payment successful!');
+        // toast.success('Payment successful!');
         return res;
       } catch (error: any) {
         console.error('Transfer funds error:', error);
