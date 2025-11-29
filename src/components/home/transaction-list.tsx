@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SwapIcon from '@assets/swap.svg?react';
-import SwipeIcon from '@assets/swipe.svg?react';
 import TransferIcon from '@assets/transfer.svg?react';
 import { formatBalance, truncateAddress } from '@src/libs/utils/common';
 import { useAxios } from '@src/providers/axios-provider';
+import routes from '@src/routes/routes';
 import { getTransactionsHistory, TransactionResponse } from '@src/services/transaction/transaction.service';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -19,7 +19,7 @@ const TransactionList = () => {
 
   const { data: transactions, isLoading } = useQuery({
     queryKey: ['transactions', { page: 1, limit: 2 }],
-    queryFn: () => getTransactionsHistory(axios, { page: 1, limit: 2 }),
+    queryFn: () => getTransactionsHistory(axios, { page: 1, limit: 3 }),
   });
 
   const handleTxClick = (tx: TransactionResponse) => {
@@ -69,16 +69,24 @@ const TransactionList = () => {
   return (
     <>
       <div className="flex flex-col gap-6 px-4 py-1">
-        <div className="flex items-center gap-2">
-          <SwapIcon />
-          <div className="text-xl font-medium">Transactions</div>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <SwapIcon />
+            <div className="text-xl font-medium">Transactions</div>
+          </div>
+          <div
+            onClick={() => navigate(routes.HISTORY)}
+            className="text-primary cursor-pointer text-xs font-medium hover:underline"
+          >
+            See all
+          </div>
         </div>
-        <div className="flex w-full flex-col rounded-[32px] bg-[#F5F5F7] px-[24px]">
+        <div className="flex w-full flex-col gap-4">
           {transactions.items.map((tx) => (
             <div
               key={tx._id}
               onClick={() => handleTxClick(tx)}
-              className={`flex cursor-pointer items-center gap-4 border-b border-[#EAEAEA] py-6 transition-opacity hover:opacity-80`}
+              className={`flex cursor-pointer items-center gap-4 rounded-[8px] border border-[#EAEAEA] bg-[#F5F5F76E] px-4 py-3 transition-opacity hover:opacity-80`}
             >
               <TransferIcon />
               <div className="flex flex-1 items-center justify-between">
@@ -105,16 +113,6 @@ const TransactionList = () => {
               </div>
             </div>
           ))}
-
-          <div
-            className="flex items-center justify-center gap-2 py-6"
-            onClick={() => {
-              navigate('/history');
-            }}
-          >
-            <SwipeIcon />
-            <div className="text-[12px] font-medium">Swipe up to see all transactions</div>
-          </div>
         </div>
       </div>
 

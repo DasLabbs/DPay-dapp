@@ -8,8 +8,8 @@ import ReceiveIcon from '@assets/receive.svg?react';
 import RewardsIcon from '@assets/rewards.svg?react';
 import SendIcon from '@assets/send.svg?react';
 import SettingsIcon from '@assets/settings.svg?react';
-import BottomBar from '@src/components/bottom-bar';
 import Balance from '@src/components/home/balance';
+import ServiceGrid from '@src/components/home/service-grid';
 import TransactionList from '@src/components/home/transaction-list';
 import CopyButton from '@src/components/shared/copy-button';
 import SplashScreen from '@src/components/splash-screen';
@@ -50,7 +50,7 @@ const HomePage = () => {
         {!assetsLoaded ? (
           <SplashScreen key="splash" />
         ) : (
-          <div className="relative flex h-full w-full flex-col pb-10">
+          <div className="relative flex h-full w-full flex-col overflow-y-auto pb-40">
             <div className="border-b-border flex w-full items-center justify-between gap-8 bg-[linear-gradient(180deg,#FFF_0%,rgba(255,255,255,0.80)_48.56%,rgba(255,255,255,0.50)_100%)] px-4 py-3 backdrop-blur-[50px]">
               <Link to={routes.SETTINGS}>
                 <SettingsIcon />
@@ -117,9 +117,9 @@ const HomePage = () => {
               </div>
             </div>
 
-            <TransactionList />
+            <ServiceGrid />
 
-            <BottomBar />
+            <TransactionList />
           </div>
         )}
       </AnimatePresence>
